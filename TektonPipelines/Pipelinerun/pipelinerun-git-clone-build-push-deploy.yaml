@@ -15,7 +15,7 @@ spec:
   - name: image-full-path-with-tag
     value: quay.io/rh-ee-ksaha/test:latest
   - name: deployment-manifest
-    value: https://raw.githubusercontent.com/koustavsaha/spring-boot-docker/master/TektonPipelines/Resources/deployment.yaml
+    value: https://raw.githubusercontent.com/koustavsaha/Tekton-pipeline-springboot/master/TektonPipelines/Resources/deployment.yaml
   workspaces:
   - name: maven-settings
     configmap:
