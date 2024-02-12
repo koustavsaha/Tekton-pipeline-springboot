@@ -28,4 +28,7 @@ spec:
       secretName: quay-secret
   - name: empty-dir
     emptyDir: {}
+  - name: sonar
+    configmap:
+      name: sonar-properties
       
