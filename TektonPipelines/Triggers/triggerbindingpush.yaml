@@ -9,6 +9,6 @@ spec:
   - name: tag-name
     value: $(body.ref)
   - name: image-full-path-with-tag
-    value: quay.io/rh-ee-ksaha/test:$(body.pusher.name)
+    value: quay.io/rh-ee-ksaha/test:ProductionBy$(body.pusher.name)
   - name: deployment-manifest
     value: https://raw.githubusercontent.com/koustavsaha/Tekton-pipeline-springboot/master/TektonPipelines/Resources/deployment.yaml

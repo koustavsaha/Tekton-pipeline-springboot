@@ -5,28 +5,33 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
+
     - name: github-listner-push
       interceptors:
         - ref:
-            name: "github"
-            kind: ClusterInterceptor
-            apiVersion: triggers.tekton.dev
+            name: "cel"
           params:
-          - name: "eventTypes"
-            value: ["push"]    
+          - name: "filter"
+            value: "(header.match('X-GitHub-Event', 'push') && body.ref.startsWith('refs/heads/master'))"
       bindings:
         - ref: tekton-trigger-binding-push
       template:
           ref: tekton-trigger-template-push
+          
     - name: github-listener-pull
       interceptors:
-        - ref:
+        - name: "validate GitHub payload and filter on eventType"
+          ref:
             name: "github"
-            kind: ClusterInterceptor
-            apiVersion: triggers.tekton.dev
           params:
           - name: "eventTypes"
             value: ["pull_request"]
+        - name: "CEL filter: only when PRs are opened"
+          ref:
+            name: "cel"
+          params:
+          - name: "filter"
+            value: "body.action in ['opened', 'reopened']"
       bindings:
         - ref: tekton-trigger-binding-pull
       template:
