@@ -21,7 +21,7 @@ spec:
         taskRunTemplate:
           serviceAccountName: pipeline
         pipelineRef:
-          name: pipeline-git-clone-build-push-deploy
+          name: pipeline-push
         params:
         - name: repo-url
           value: $(tt.params.repo-url)

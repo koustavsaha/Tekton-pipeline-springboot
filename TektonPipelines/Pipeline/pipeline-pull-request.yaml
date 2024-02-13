@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: pipeline-git-clone-build-push-deploy
+  name: pipeline-pull-request
 spec:
   description: |
     this pipeline offers a typical CI/CD process, with a flow including:
@@ -21,9 +21,7 @@ spec:
   - name: image-full-path-with-tag
     type: string
     description: The image full path to host the built image, with version tag, e.g. "docker.io/koustavs18/nodejs-app:latest"
-  - name: deployment-manifest
-    type: string
-    description: The manifest file for deployment.
+
 
   # Workspaces
   workspaces:
@@ -51,8 +49,9 @@ spec:
     - name: output
       workspace: workspace
 
-    # 2.1. Task - sonar scan
-  - name: sonar
+
+  # 3. Task - maven build
+  - name: maven-build
     taskRef:
       resolver: hub
       params:
@@ -71,37 +70,6 @@ spec:
     params:
     - name: GOALS
       value:
-        - install
-        - sonar:sonar
-        - -Dsonar.projectKey=Test
-        - -Dsonar.host.url=https://sonarqube-default.apps.rosa.ows5i-dzz2w-hai.d41a.p3.openshiftapps.com
-        - -Dsonar.login=1deab8bb2dbc1577acbc6d31f8c6355e6b64690c
-    workspaces:
-    - name: maven-settings
-      workspace: maven-settings
-    - name: source
-      workspace: workspace
-
-  # 2. Task - maven build
-  - name: maven
-    taskRef:
-      resolver: hub
-      params:
-      - name: catalog
-        value: tekton-catalog-tasks
-      - name: type
-        value: artifact
-      - name: kind
-        value: task
-      - name: name
-        value: maven
-      - name: version
-        value: "0.3"
-    runAfter:
-    - sonar
-    params:
-    - name: GOALS
-      value:
         - -B
         - -DskipTests
         - clean
@@ -112,13 +80,13 @@ spec:
     - name: source
       workspace: workspace
 
-  # 3. Task - buildah build & push
+  # 4. Task - buildah build & push to quay
   - name: buildah
     taskRef:
       name: buildah
       kind: ClusterTask
     runAfter:
-    - maven
+    - maven-build
     params:
       - name: IMAGE
         value: "$(params.image-full-path-with-tag)"
@@ -132,32 +100,3 @@ spec:
       - name: dockerconfig
         workspace: quay-cred
 
-  # 4. Task - kubectl deploy
-  - name: deploy
-    taskRef:
-      resolver: hub
-      params:
-      - name: catalog
-        value: tekton-catalog-tasks
-      - name: type
-        value: artifact
-      - name: kind
-        value: task
-      - name: name
-        value: kubernetes-actions
-      - name: version
-        value: "0.2"
-    runAfter:
-    - buildah
-    params:
-      - name: script
-        value: |
-          kubectl apply -f $(params.deployment-manifest)
-          echo "----------"
-          kubectl patch deployment spring-boot-docker -p '{"spec":{"template":{"spec":{"containers":[{"name":"myapp","image":"$(params.image-full-path-with-tag)"}]}}}}'
-          kubectl get deployment
-    workspaces:
-      - name: kubeconfig-dir
-        workspace: empty-dir
-      - name: manifest-dir
-        workspace: empty-dir
