@@ -1,0 +1,14 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: tekton-trigger-binding-push
+spec:
+  params:
+  - name: repo-url
+    value: $(body.repository.clone_url)
+  - name: tag-name
+    value: $(body.ref)
+  - name: image-full-path-with-tag
+    value: quay.io/rh-ee-ksaha/test:$(body.pusher.name)
+  - name: deployment-manifest
+    value: https://raw.githubusercontent.com/koustavsaha/Tekton-pipeline-springboot/master/TektonPipelines/Resources/deployment.yaml
