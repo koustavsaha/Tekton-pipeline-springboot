@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: hello-world-pipeline
+spec:
+  # Parameters
+  params:
+  - name: what-to-print
+    type: string
+
+  # Taksks
+  tasks:
+
+  # 1. Task - hello-world
+  - name: hello-world
+    taskRef:
+      name: hello-world
+    params:
+    - name: what-to-print
+      value: $(params.what-to-print)
