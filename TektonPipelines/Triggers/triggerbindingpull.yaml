@@ -7,7 +7,7 @@ spec:
   - name: repo-url
     value: $(body.repository.html_url)
   - name: tag-name
-    value: $(body.pull_request.head.ref)
+    value: $(body.pull_request.head.sha)
   - name: image-full-path-with-tag
     value: quay.io/rh-ee-ksaha/test:PRby$(body.pull_request.head.sha)
 
