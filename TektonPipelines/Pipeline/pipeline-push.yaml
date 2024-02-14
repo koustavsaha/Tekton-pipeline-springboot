@@ -51,36 +51,36 @@ spec:
     - name: output
       workspace: workspace
 
-  #   # 2. Task - sonarqube scan
-  # - name: code-quality-scan
-  #   taskRef:
-  #     resolver: hub
-  #     params:
-  #     - name: catalog
-  #       value: tekton-catalog-tasks
-  #     - name: type
-  #       value: artifact
-  #     - name: kind
-  #       value: task
-  #     - name: name
-  #       value: maven
-  #     - name: version
-  #       value: "0.3"
-  #   runAfter:
-  #   - fetch-repository
-  #   params:
-  #   - name: GOALS
-  #     value:
-  #       - install
-  #       - sonar:sonar
-  #       - -Dsonar.projectKey=Testy
-  #       - -Dsonar.host.url=https://sonarqube-koustav.apps.ci-ln-5inxhtk-76ef8.origin-ci-int-aws.dev.rhcloud.com
-  #       - -Dsonar.login=e6b95020a2d3fa0e1c64234fbfad73e0a3893c78
-  #   workspaces:
-  #   - name: maven-settings
-  #     workspace: maven-settings
-  #   - name: source
-  #     workspace: workspace
+    # 2. Task - sonarqube scan
+  - name: code-quality-scan
+    taskRef:
+      resolver: hub
+      params:
+      - name: catalog
+        value: tekton-catalog-tasks
+      - name: type
+        value: artifact
+      - name: kind
+        value: task
+      - name: name
+        value: maven
+      - name: version
+        value: "0.3"
+    runAfter:
+    - fetch-repository
+    params:
+    - name: GOALS
+      value:
+        - install
+        - sonar:sonar
+        - -Dsonar.projectKey=Testy
+        - -Dsonar.host.url=https://sonarqube-default.apps.rosa.cudoz-pqq6i-9g3.f17v.p3.openshiftapps.com
+        - -Dsonar.login=4be69ba8df99030f37db23b98cffbdb928f5982f
+    workspaces:
+    - name: maven-settings
+      workspace: maven-settings
+    - name: source
+      workspace: workspace
 
   # 3. Task - maven build
   - name: maven-build
@@ -119,7 +119,7 @@ spec:
       kind: ClusterTask
     runAfter:
     - maven-build
-    # - code-quality-scan
+    - code-quality-scan
     params:
       - name: IMAGE
         value: "$(params.image-full-path-with-tag)"
