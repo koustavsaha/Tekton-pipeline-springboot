@@ -1,0 +1,10 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: hello-world-pipeline-
+spec:
+  pipelineRef:
+    name: hello-world-pipeline
+  params:
+  - name: what-to-print
+    value: "Starting with Tekton"
