@@ -7,8 +7,8 @@ spec:
   - name: repo-url
     value: $(body.repository.clone_url)
   - name: tag-name
-    value: $(body.ref)
+    value: $(body.head_commit.id)
   - name: image-full-path-with-tag
-    value: quay.io/rh-ee-ksaha/test:ProductionBy$(body.pusher.name)
+    value: quay.io/rh-ee-ksaha/test:ProductionBy$(body.pusher.name)for$(body.head_commit.id)
   - name: deployment-manifest
     value: https://raw.githubusercontent.com/koustavsaha/Tekton-pipeline-springboot/master/TektonPipelines/Resources/deployment.yaml
