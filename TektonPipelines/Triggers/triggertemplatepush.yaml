@@ -10,8 +10,6 @@ spec:
       description: The git tag to clone.
     - name: image-full-path-with-tag
       description: The image full path to host the built image, with version tag, e.g. image-registry.openshift-image-registry.svc:5000/tekton-pipelines/spring-boot-docker:v1.0.0.
-    - name: deployment-manifest
-      description: The manifest file for deployment.
   resourcetemplates:
     - apiVersion: tekton.dev/v1
       kind: PipelineRun
@@ -29,8 +27,6 @@ spec:
           value: $(tt.params.tag-name)
         - name: image-full-path-with-tag
           value: $(tt.params.image-full-path-with-tag)
-        - name: deployment-manifest
-          value: $(tt.params.deployment-manifest)
         workspaces:
         - name: maven-settings
           configmap:

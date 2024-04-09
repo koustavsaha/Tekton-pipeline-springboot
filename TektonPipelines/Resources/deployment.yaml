@@ -1,3 +1,19 @@
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: spring-boot-docker-route
+  labels:
+    app: spring-boot-docker
+spec:
+  to:
+    kind: Service
+    name: spring-boot-docker
+  tls: null
+  port:
+    targetPort: http
+
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -27,7 +43,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: quay.io/rh-ee-ksaha/test:latest
+          image: quay.io/rh-ee-ksaha/test-arm-build:master
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
