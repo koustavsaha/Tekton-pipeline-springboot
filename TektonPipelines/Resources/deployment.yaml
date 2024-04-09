@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: quay.io/rh-ee-ksaha/test-arm-build:master
+          image: quay.io/rh-ee-ksaha/test:PRby25c209e25db2a7b2477ba661b9c25484950ad579
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
