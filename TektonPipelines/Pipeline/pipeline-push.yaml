@@ -72,8 +72,8 @@ spec:
         - install
         - sonar:sonar
         - -Dsonar.projectKey=Test
-        - -Dsonar.host.url=https://sonarqube-koustav-demo.apps.rosa.hudmy-y5usx-sqw.9ymc.p3.openshiftapps.com
-        - -Dsonar.login=014d7d8a782e67919353c0b9f4f405dc739b5c29
+        - -Dsonar.host.url=https://sonarqube-koustav-demo.apps.rosa.a3krd-9zhs8-p5y.uks8.p3.openshiftapps.com
+        - -Dsonar.login=77aa1ad7c8eae52cc54fa14a412f68426dd7eab3
     workspaces:
     - name: maven-settings
       workspace: maven-settings
@@ -83,18 +83,8 @@ spec:
   # 3. Task - maven build
   - name: maven-build
     taskRef:
-      resolver: hub
-      params:
-      - name: catalog
-        value: tekton-catalog-tasks
-      - name: type
-        value: artifact
-      - name: kind
-        value: task
-      - name: name
-        value: maven
-      - name: version
-        value: "0.3"
+      name: maven
+      kind: ClusterTask
     runAfter:
     - fetch-repository
     params:
