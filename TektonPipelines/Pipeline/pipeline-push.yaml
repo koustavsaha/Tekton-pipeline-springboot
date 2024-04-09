@@ -21,9 +21,7 @@ spec:
   - name: image-full-path-with-tag
     type: string
     description: The image full path to host the built image, with version tag, e.g. "docker.io/koustavs18/nodejs-app:latest"
-  - name: deployment-manifest
-    type: string
-    description: The manifest file for deployment.
+
 
   # Workspaces
   workspaces:
@@ -73,9 +71,9 @@ spec:
       value:
         - install
         - sonar:sonar
-        - -Dsonar.projectKey=Testy
-        - -Dsonar.host.url=https://sonarqube-default.apps.rosa.cudoz-pqq6i-9g3.f17v.p3.openshiftapps.com
-        - -Dsonar.login=4be69ba8df99030f37db23b98cffbdb928f5982f
+        - -Dsonar.projectKey=Test
+        - -Dsonar.host.url=https://sonarqube-koustav-demo.apps.rosa.dvw99-8pc4k-gnr.itpy.p3.openshiftapps.com
+        - -Dsonar.login=2c9825acb9427cfdefc3e1b90446bd8089381efe
     workspaces:
     - name: maven-settings
       workspace: maven-settings
@@ -136,29 +134,18 @@ spec:
   # 5. Task - kubectl deploy
   - name: deploy
     taskRef:
-      resolver: hub
-      params:
-      - name: catalog
-        value: tekton-catalog-tasks
-      - name: type
-        value: artifact
-      - name: kind
-        value: task
-      - name: name
-        value: kubernetes-actions
-      - name: version
-        value: "0.2"
+      name: openshift-client
+      kind: ClusterTask
     runAfter:
     - buildah
     params:
-      - name: script
+      - name: SCRIPT
         value: |
-          kubectl apply -f $(params.deployment-manifest)
+          # oc apply --filename k8s/
+          sed 's|image: quay.io/rh-ee-ksaha/test-arm-build:master|image: $(params.image-full-path-with-tag)|g' k8s/deployment.yml | oc apply --filename -
           echo "----------"
-          kubectl patch deployment spring-boot-docker -p '{"spec":{"template":{"spec":{"containers":[{"name":"myapp","image":"$(params.image-full-path-with-tag)"}]}}}}'
-          kubectl get deployment
+          # oc patch deployment spring-boot-docker -p '{"spec":{"template":{"spec":{"containers":[{"name":"myapp","image":"$(params.image-full-path-with-tag)"}]}}}}'
+          oc get deployment
     workspaces:
-      - name: kubeconfig-dir
-        workspace: empty-dir
       - name: manifest-dir
-        workspace: empty-dir
+        workspace: workspace

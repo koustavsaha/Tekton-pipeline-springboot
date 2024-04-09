@@ -1,12 +1,12 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  generateName: pipelinerun-git-clone-build-push-deploy-
+  generateName: pipelinerun-pull-
 spec:
   taskRunTemplate:
     serviceAccountName: pipeline
   pipelineRef:
-    name: pipeline-push
+    name: pipeline-pull-request
   params:
   - name: repo-url
     value: https://github.com/koustavsaha/spring-boot-docker/
@@ -14,8 +14,6 @@ spec:
     value: master
   - name: image-full-path-with-tag
     value: quay.io/rh-ee-ksaha/test:latest
-  - name: deployment-manifest
-    value: https://raw.githubusercontent.com/koustavsaha/Tekton-pipeline-springboot/master/TektonPipelines/Resources/deployment.yaml
   workspaces:
   - name: maven-settings
     configmap:
@@ -28,5 +26,3 @@ spec:
       secretName: quay-secret
   - name: empty-dir
     emptyDir: {}
-
-      
