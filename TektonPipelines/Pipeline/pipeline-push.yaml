@@ -72,8 +72,8 @@ spec:
         - install
         - sonar:sonar
         - -Dsonar.projectKey=Test
-        - -Dsonar.host.url=https://sonarqube-koustav-demo.apps.rosa.a3krd-9zhs8-p5y.uks8.p3.openshiftapps.com
-        - -Dsonar.login=77aa1ad7c8eae52cc54fa14a412f68426dd7eab3
+        - -Dsonar.host.url=https://sonarqube-default.apps.rosa.gvkef-fhe3i-fgd.ki63.p3.openshiftapps.com
+        - -Dsonar.login=ef0bb6eafc0d9f80b41e5caff1c9880ec702dfc6
     workspaces:
     - name: maven-settings
       workspace: maven-settings
